@@ -36,9 +36,9 @@ class FlightPricingController {
           OrderID: 1,
           TUI:tui
         }],
-        Mode: 'SS', // Semi-synchronous mode
-        Options: 'A',
-        Source: 'CF', // Cache first
+        Mode: 'AS', // Semi-synchronous mode
+        Options: '',
+        Source: 'SF', // Cache first
         TripType: tripType
       };
     //   console.log(smartPricerPayload);
