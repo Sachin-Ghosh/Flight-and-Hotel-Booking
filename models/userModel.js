@@ -129,7 +129,62 @@ const userSchema = new mongoose.Schema({
       lastActive: Date,
       expiresAt: Date
     }]
-  }
+  },
+  cards: [{
+    cardNumber: {
+      type: String,
+      required: true,
+      // Only store last 4 digits for security
+      set: function(number) {
+        this._fullCardNumber = number; // Temporary store full number for processing
+        return number.slice(-4);
+      }
+    },
+    cardHolderName: {
+      type: String,
+      required: true
+    },
+    expiryMonth: {
+      type: String,
+      required: true,
+      validate: {
+        validator: function(v) {
+          return /^(0[1-9]|1[0-2])$/.test(v);
+        },
+        message: 'Invalid expiry month'
+      }
+    },
+    expiryYear: {
+      type: String,
+      required: true,
+      validate: {
+        validator: function(v) {
+          return /^\d{4}$/.test(v);
+        },
+        message: 'Invalid expiry year'
+      }
+    },
+    cardType: {
+      type: String,
+      enum: ['VISA', 'MASTERCARD', 'AMEX', 'OTHER'],
+      required: true
+    },
+    isDefault: {
+      type: Boolean,
+      default: false
+    },
+    billingAddress: {
+      street: String,
+      city: String,
+      state: String,
+      country: String,
+      postalCode: String
+    },
+    isInternational: {
+      type: Boolean,
+      default: false
+    }
+  }]
 }, {
   timestamps: true
 });

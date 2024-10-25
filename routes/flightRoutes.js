@@ -4,7 +4,7 @@ const flightSearchController = require("../controllers/flight/searchController")
 const flightPricingController = require('../controllers/flight/pricingController');
 const flightItineraryController = require('../controllers/flight/itineraryController');
 const retrieveBookingController = require("../controllers/flight/retrieveBookingController");
-// const flightPaymentController = require("../controllers/flight/paymentController");
+const paymentController  = require("../controllers/flight/paymentController");
 const { authMiddleware } = require("../middleware/authMiddleware");
 const { validateRequest } = require("../middleware/validationMiddleware");
 
@@ -20,6 +20,22 @@ router.post('/pricing/live',
   );
   router.post('/itinerary/create', flightItineraryController.createItinerary);
   router.post('/booking/retrieve', retrieveBookingController.getBooking);
+
+  // Route to initiate payment for a booking
+router.post('/bookings/:bookingId/payments',
+    paymentController.initiatePayment
+  );
+  
+  // Route to handle payment callbacks
+  router.post('/payments/callback/:transactionId',
+    paymentController.handlePaymentCallback
+  );
+  
+  // Route to handle payment redirects
+  router.get('/payments/callback/:transactionId',
+    paymentController.handlePaymentCallback
+  );
+  
 
 router.get("/search/:TUI", flightSearchController.getSearchResults);
 
