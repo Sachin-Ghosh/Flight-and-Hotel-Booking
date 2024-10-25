@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 const flightSearchController = require("../controllers/flight/searchController");
 const flightPricingController = require('../controllers/flight/pricingController');
-// const flightBookingController = require("../controllers/flight/bookingController");
+const flightItineraryController = require('../controllers/flight/itineraryController');
+const retrieveBookingController = require("../controllers/flight/retrieveBookingController");
 // const flightPaymentController = require("../controllers/flight/paymentController");
 const { authMiddleware } = require("../middleware/authMiddleware");
 const { validateRequest } = require("../middleware/validationMiddleware");
@@ -17,6 +18,8 @@ router.post('/pricing/live',
     
     flightPricingController.getLivePrice
   );
+  router.post('/itinerary/create', flightItineraryController.createItinerary);
+  router.post('/booking/retrieve', retrieveBookingController.getBooking);
 
 router.get("/search/:TUI", flightSearchController.getSearchResults);
 

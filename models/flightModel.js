@@ -1,3 +1,4 @@
+// 1. First, let's fix the Flight Schema
 const mongoose = require('mongoose');
 
 const flightSchema = new mongoose.Schema({
@@ -7,7 +8,7 @@ const flightSchema = new mongoose.Schema({
     index: true
   },
   provider: {
-    type: String,  // Added for tracking the data provider
+    type: String,
     required: true
   },
   airline: {
@@ -16,8 +17,8 @@ const flightSchema = new mongoose.Schema({
       required: true
     },
     name: String,
-    marketingCarrier: String,    // Marketing carrier code
-    operatingCarrier: String     // Operating carrier code
+    marketingCarrier: String,
+    operatingCarrier: String
   },
   route: {
     departure: {
@@ -60,12 +61,14 @@ const flightSchema = new mongoose.Schema({
           location: String
         },
         duration: String,
-        type: String  // Connection type (e.g., 'C' for connection, 'H' for halt)
+        type: String
       }]
     }
   },
   aircraft: {
-    type: String,
+    type: {
+      type: String
+    },
     code: String,
     fareClass: String,
     cabin: String
@@ -80,44 +83,14 @@ const flightSchema = new mongoose.Schema({
       required: true
     },
     net: Number,
-    commission: Number,
-    transactionFee: Number,
-    vatOnFee: Number,
-    wpNet: Number,
-    fareBasicCode: String,
-    fareType: String,
-    trendFare: Number,
-    promo: String
+    fareBasicCode: String
   },
   availability: {
-    seats: Number,
     refundable: Boolean,
-    hold: Boolean,
-    holdInfo: String
+    hold: Boolean
   },
-  amenities: [String],
   inclusions: {
-    baggage: String,
-    meals: String,
-    pieceDescription: String
-  },
-  notices: [{
-    message: String,
-    link: String,
-    type: String
-  }],
-  grouping: {
-    returnIdentifier: Number,
-    groupCount: Number,
-    journeyKey: String,
-    index: String
-  },
-  meta: {
-    gfl: Boolean,
-    recommended: Boolean,
-    gsdPriority: Number,
-    isBusStation: Boolean,
-    channelCode: String
+    baggage: String
   }
 }, {
   timestamps: true
