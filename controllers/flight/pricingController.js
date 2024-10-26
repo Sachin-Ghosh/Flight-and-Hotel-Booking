@@ -18,7 +18,7 @@ class FlightPricingController {
    */
   async getLivePrice(req, res, next) {
     try {
-      const { amount, index, tripType = 'ON',tui } = req.body;
+      const { amount, index, tripType = 'ON',tui , orderId} = req.body;
        
       
       if (!amount || !index) {
@@ -33,7 +33,7 @@ class FlightPricingController {
         Trips: [{
           Amount: parseFloat(amount),
           Index: index,
-          OrderID: 1,
+          OrderID: orderId,
           TUI:tui
         }],
         Mode: 'AS', // Semi-synchronous mode
