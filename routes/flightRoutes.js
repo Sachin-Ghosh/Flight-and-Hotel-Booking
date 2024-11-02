@@ -4,8 +4,9 @@ const flightSearchController = require("../controllers/flight/searchController")
 const flightPricingController = require('../controllers/flight/pricingController');
 const flightItineraryController = require('../controllers/flight/itineraryController');
 const retrieveBookingController = require("../controllers/flight/retrieveBookingController");
+const seatLayoutController = require("../controllers/flight/seatLayoutController");
 const paymentController  = require("../controllers/flight/paymentController");
-const { authMiddleware } = require("../middleware/authMiddleware");
+const { authGuard } = require("../middleware/authMiddleware");
 const { validateRequest } = require("../middleware/validationMiddleware");
 
 // Search Routes
@@ -36,6 +37,11 @@ router.post('/bookings/:bookingId/payments',
     paymentController.handlePaymentCallback
   );
   
+
+  router.get(
+    '/layout',
+    seatLayoutController.getSeatLayout
+  );
 
 router.get("/search/:TUI", flightSearchController.getSearchResults);
 

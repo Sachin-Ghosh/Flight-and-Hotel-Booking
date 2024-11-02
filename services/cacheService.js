@@ -147,6 +147,7 @@ class CacheService {
 
 class FlightCacheService {
   constructor() {
+    this.cacheService = new CacheService(); 
     this.CACHE_DURATION = {
       SEARCH_RESULTS: 300, // 5 minutes
       FLIGHT_DETAILS: 3600, // 1 hour
@@ -372,10 +373,12 @@ class FlightCacheService {
   }
 }
 
-module.exports = new FlightCacheService();
+// Export a singleton instance of CacheService as the default export
+const defaultCacheService = new CacheService();
 
-module.exports = {
-    CacheService,
-    FlightCacheService
-  };
+module.exports = defaultCacheService;
+
+// Also export the classes if needed elsewhere
+module.exports.CacheService = CacheService;
+module.exports.FlightCacheService = FlightCacheService;
   

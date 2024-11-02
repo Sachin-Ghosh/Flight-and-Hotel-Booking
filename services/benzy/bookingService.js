@@ -255,6 +255,7 @@ class BookingService {
       throw error;
     }
   }
+  
 
   // Private helper methods
   async _validatePricing(bookingDetails) {
@@ -289,24 +290,60 @@ class BookingService {
     };
   }
 
+  async validateSelectedSeats(tui, selectedSeats) {
+    const cachedLayout = await cacheService.get(`seat-layout:${tui}`);
+    if (!cachedLayout) {
+      throw new ApiError(400, 'Seat layout session expired');
+    }
+
+    // Validate each selected seat
+    for (const seat of selectedSeats) {
+      const flight = cachedLayout.flights.find(f => 
+        f.flightNumber === seat.flightNumber
+      );
+
+      if (!flight) {
+        throw new ApiError(400, `Invalid flight number: ${seat.flightNumber}`);
+      }
+
+      const seatData = flight.seatMap.rows
+        .flatMap(row => row.seats)
+        .find(s => s.number === seat.seatNumber);
+
+      if (!seatData) {
+        throw new ApiError(400, `Invalid seat number: ${seat.seatNumber}`);
+      }
+
+      if (!seatData.available) {
+        throw new ApiError(400, `Seat ${seat.seatNumber} is not available`);
+      }
+
+      // Validate pricing
+      if (seatData.pricing.total !== seat.amount) {
+        throw new ApiError(400, `Invalid pricing for seat ${seat.seatNumber}`);
+      }
+    }
+
+    return true;
+  }
+
   _formatSSRDetails(ancillaries) {
     const ssrDetails = [];
     
     if (ancillaries?.seats?.length) {
+      // Validate seats before formatting
+       this.validateSelectedSeats(
+        ancillaries.tui,
+        ancillaries.seats
+      );
+
       ssrDetails.push(...ancillaries.seats.map(seat => ({
         Type: 'SEAT',
         FlightNumber: seat.flightNumber,
-        PassengerIndex: seat.passenger,
-        Code: seat.seatNumber
-      })));
-    }
-
-    if (ancillaries?.meals?.length) {
-      ssrDetails.push(...ancillaries.meals.map(meal => ({
-        Type: 'MEAL',
-        FlightNumber: meal.flightNumber,
-        PassengerIndex: meal.passenger,
-        Code: meal.mealType
+        PassengerIndex: seat.passengerIndex,
+        Code: seat.seatNumber,
+        Amount: seat.amount,
+        SSID: seat.ssrCode
       })));
     }
 
