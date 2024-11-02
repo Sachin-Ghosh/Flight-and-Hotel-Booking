@@ -5,6 +5,7 @@ const flightPricingController = require('../controllers/flight/pricingController
 const flightItineraryController = require('../controllers/flight/itineraryController');
 const retrieveBookingController = require("../controllers/flight/retrieveBookingController");
 const seatLayoutController = require("../controllers/flight/seatLayoutController");
+const ssrController  = require("../controllers/flight/ssrController");
 const paymentController  = require("../controllers/flight/paymentController");
 const { authGuard } = require("../middleware/authMiddleware");
 const { validateRequest } = require("../middleware/validationMiddleware");
@@ -37,11 +38,74 @@ router.post('/bookings/:bookingId/payments',
     paymentController.handlePaymentCallback
   );
   
-
+//Route to get flight seat Layout
   router.get(
     '/layout',
     seatLayoutController.getSeatLayout
   );
+
+
+  // Validation schemas
+const ssrValidation = {
+  params: {
+    tui: {
+      type: 'string',
+      required: true,
+      pattern: '^[0-9a-fA-F-]+$'
+    },
+    flightNumber: {
+      type: 'string',
+      required: true
+    }
+  },
+  query: {
+    source: {
+      type: 'string',
+      enum: ['LV', 'CF'],
+      default: 'LV'
+    },
+    fareType: {
+      type: 'string',
+      enum: ['N', 'S'],
+      default: 'N'
+    }
+  }
+};
+
+const validateSSRSchema = {
+  params: ssrValidation.params,
+  body: {
+    ssrs: {
+      type: 'array',
+      required: true,
+      items: {
+        type: 'object',
+        required: ['code', 'id'],
+        properties: {
+          code: { type: 'string' },
+          id: { type: 'number' },
+          amount: { type: 'number' },
+          passengerIndex: { type: 'number' }
+        }
+      }
+    }
+  }
+};
+// Routes
+router.get(
+  '/ssr/:tui/:flightNumber',
+  // authenticate,
+  // validateRequest(ssrValidation),
+  ssrController.getFlightSSR
+);
+
+router.post(
+  '/ssr/validate/:tui/:flightNumber',
+  // authenticate,
+  validateRequest(validateSSRSchema),
+  ssrController.validateSSRSelection
+);
+
 
 router.get("/search/:TUI", flightSearchController.getSearchResults);
 
