@@ -11,7 +11,9 @@ const authConfig = {
     COOKIE_SECRET: process.env.COOKIE_SECRET,
     CORS_ORIGINS: process.env.CORS_ORIGINS ? 
       process.env.CORS_ORIGINS.split(',') : 
-      ['http://localhost:3000']
+      ['http://localhost:3000',
+        'https://flight-and-hotel-booking-backend.onrender.com'
+      ]
   };
   
   module.exports = authConfig;
