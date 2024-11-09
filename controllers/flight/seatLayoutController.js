@@ -70,26 +70,6 @@ class SeatLayoutController {
     }
   }
 
-//   _validateRequest(query) {
-//     const requiredFields = {
-//       tui: 'Transaction Unique Identifier is required',
-//       orderId: 'Order ID is required',
-//       amount: 'Amount is required'
-//     };
-
-//     const errors = [];
-
-//     for (const [field, message] of Object.entries(requiredFields)) {
-//       if (!query[field]) {
-//         errors.push(message);
-//       }
-//     }
-
-//     if (errors.length > 0) {
-//       throw new ApiError(400, 'Validation failed', { errors });
-//     }
-//   }
-
   _formatSeatLayout(rawData) {
     const formattedData = {
       tui: rawData.TUI,
