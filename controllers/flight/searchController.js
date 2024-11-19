@@ -47,9 +47,9 @@ class FlightSearchController {
         
         return res.json({
           success: true,
+          TUI: searchResponse.TUI,
           fromCache: searchResponse.fromCache,
-          data: searchResponse.data,
-          TUI: searchResponse.TUI
+          data: searchResponse.data
         });
       } catch (error) {
         logger.error('Flight search error:', error);
