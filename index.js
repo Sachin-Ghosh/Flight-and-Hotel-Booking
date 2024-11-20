@@ -53,7 +53,7 @@ app.get('/', function(req, res) {
    res.send("Hello world!");
 });
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 4545;
 
 app.listen(port, "0.0.0.0", () => {
     console.log(`Server is running on http://localhost:${port}`);
